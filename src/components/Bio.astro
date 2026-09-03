@@ -12,9 +12,17 @@ const singles = ['Dirac', 'Invierno', 'Lugar', 'Cristal', '1727'];
         directas, canciones que se cuelan cuando bajás la guardia.
       </p>
 
-      <details class="bio__extended">
-        <summary class="bio__extended-toggle">Leer más</summary>
-        <div class="bio__extended-body">
+      <div class="bio__extended">
+        <button
+          class="bio__extended-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="bio-extended-body"
+        >
+          Leer más <span class="bio__toggle-arrow" aria-hidden="true">↓</span>
+        </button>
+
+        <div class="bio__extended-body" id="bio-extended-body" hidden>
           <p>
             No partimos de una fórmula: partimos de lo que nos pasa. Grabamos
             lo áspero sin pulirlo de más, dejamos que el silencio ocupe su
@@ -47,7 +55,7 @@ const singles = ['Dirac', 'Invierno', 'Lugar', 'Cristal', '1727'];
             {singles.map(s => <li>{s}</li>)}
           </ul>
         </div>
-      </details>
+      </div>
     </div>
 
   </div>
@@ -77,25 +85,26 @@ const singles = ['Dirac', 'Invierno', 'Lugar', 'Cristal', '1727'];
     letter-spacing: 0.14em;
     text-transform: uppercase;
     font-family: var(--font-mono);
-    list-style: none;
     display: inline-flex;
     align-items: center;
-    gap: var(--space-xs);
+    gap: 0.4em;
     border: none;
     background: none;
     padding: 0;
   }
 
-  .bio__extended-toggle::marker,
-  .bio__extended-toggle::-webkit-details-marker { display: none; }
+  .bio__extended-toggle:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
 
-  .bio__extended-toggle::after {
-    content: '↓';
+  .bio__toggle-arrow {
     display: inline-block;
     transition: transform 0.3s ease;
   }
 
-  .bio__extended[open] .bio__extended-toggle::after {
+  .bio__extended-toggle[aria-expanded="true"] .bio__toggle-arrow {
     transform: rotate(180deg);
   }
 
@@ -107,16 +116,17 @@ const singles = ['Dirac', 'Invierno', 'Lugar', 'Cristal', '1727'];
     color: var(--color-text-dim);
     line-height: 1.8;
     font-size: 1rem;
+    overflow: hidden;
   }
 
   @media (prefers-reduced-motion: no-preference) {
-    .bio__extended-body {
-      animation: bio-fade 0.3s ease;
+    .bio__extended-body.is-opening {
+      animation: bio-fade 0.35s ease forwards;
     }
   }
 
   @keyframes bio-fade {
-    from { opacity: 0; transform: translateY(-6px); }
+    from { opacity: 0; transform: translateY(-8px); }
     to   { opacity: 1; transform: translateY(0); }
   }
 
@@ -144,3 +154,21 @@ const singles = ['Dirac', 'Invierno', 'Lugar', 'Cristal', '1727'];
 
   .bio__singles li:first-child::before { content: ''; }
 </style>
+
+<script>
+  const btn  = document.querySelector<HTMLButtonElement>('.bio__extended-toggle');
+  const body = document.querySelector<HTMLElement>('#bio-extended-body');
+  if (btn && body) {
+    btn.addEventListener('click', () => {
+      const opening = btn.getAttribute('aria-expanded') === 'false';
+      btn.setAttribute('aria-expanded', String(opening));
+      if (opening) {
+        body.removeAttribute('hidden');
+        body.classList.add('is-opening');
+        body.addEventListener('animationend', () => body.classList.remove('is-opening'), { once: true });
+      } else {
+        body.setAttribute('hidden', '');
+      }
+    });
+  }
+</script>
