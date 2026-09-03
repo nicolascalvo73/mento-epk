@@ -1,28 +1,6 @@
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-// ─── Draw-in helpers ────────────────────────────────────────────────────────
-
-function prepareStrokePaths(paths: SVGGeometryElement[]): void {
-  paths.forEach((p) => {
-    const len = p.getTotalLength();
-    gsap.set(p, {
-      strokeDasharray: len,
-      strokeDashoffset: len,
-    });
-  });
-}
-
-function drawInPaths(paths: SVGGeometryElement[], delay = 0): gsap.core.Tween {
-  return gsap.to(paths, {
-    strokeDashoffset: 0,
-    duration: 0.7,
-    stagger: 0.15,
-    ease: 'power2.inOut',
-    delay,
-  });
-}
-
 // ─── Main init ──────────────────────────────────────────────────────────────
 
 export function initLogoAnimation(): void {
@@ -30,38 +8,34 @@ export function initLogoAnimation(): void {
   const svg = wrapper?.querySelector<SVGSVGElement>('svg');
   if (!wrapper || !svg) return;
 
-  const paths = Array.from(
-    svg.querySelectorAll<SVGGeometryElement>('path, circle, rect, ellipse, line, polyline, polygon')
-  );
+  // Target each letter path by id — order determines stagger sequence (m→e→n→t→o)
+  const letterIds = ['#logo-m', '#logo-e', '#logo-n', '#logo-t', '#logo-o'];
+  const paths = letterIds
+    .map((id) => svg.querySelector<SVGPathElement>(id))
+    .filter((el): el is SVGPathElement => el !== null);
 
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // ── 1. Draw-in on load ──────────────────────────────────────────────────
+  //
+  // Logo uses filled paths (not strokes), so the reveal is a staggered
+  // opacity + upward translateY per letter — cleaner than clip-path for
+  // a serif/handcrafted mark like this one.
 
   if (prefersReduced) {
-    // Skip animation: show logo immediately
-    gsap.set(paths, { strokeDasharray: 'none', strokeDashoffset: 0, opacity: 1 });
+    gsap.set(paths, { opacity: 1, y: 0 });
     gsap.set(wrapper, { opacity: 1 });
   } else {
-    gsap.set(wrapper, { opacity: 0 });
-    // Attempt DrawSVGPlugin (Club GSAP). If not registered, fall back to manual.
-    const hasDrawSVG = gsap.plugins && ('drawSVG' in (gsap.plugins as Record<string, unknown>));
-
-    if (hasDrawSVG) {
-      gsap.set(wrapper, { opacity: 1 });
-      gsap.from(paths, {
-        drawSVG: '0%',
-        duration: 0.8,
-        stagger: 0.15,
-        ease: 'power2.inOut',
-        delay: 0.3,
-      });
-    } else {
-      // Manual stroke-dashoffset fallback
-      prepareStrokePaths(paths);
-      gsap.set(wrapper, { opacity: 1 });
-      drawInPaths(paths, 0.3);
-    }
+    gsap.set(wrapper, { opacity: 1 });
+    gsap.set(paths, { opacity: 0, y: 18 });
+    gsap.to(paths, {
+      opacity: 1,
+      y: 0,
+      duration: 0.65,
+      stagger: 0.1,
+      ease: 'power3.out',
+      delay: 0.25,
+    });
   }
 
   // ── 2. Sticky shrink on scroll ─────────────────────────────────────────
@@ -107,7 +81,7 @@ export function initLogoAnimation(): void {
   // ── 3. Section-aware color (prep hook) ─────────────────────────────────
   //
   // Future: add data-logo-color to each section, and toggle a class/data-attr
-  // on wrapper here. The SVG paths already respond to --logo-stroke via CSS.
+  // on wrapper here. The SVG paths already respond to --logo-fill via CSS.
   //
   // Example:
   // document.querySelectorAll('[data-logo-color]').forEach((section) => {
