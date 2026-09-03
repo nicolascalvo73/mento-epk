@@ -38,7 +38,6 @@ const photos = [
   aria-modal="true"
   aria-label="Foto en pantalla completa"
   aria-hidden="true"
-  hidden
 >
   <button class="lightbox__close" type="button" aria-label="Cerrar">
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -127,11 +126,13 @@ const photos = [
     align-items: center;
     justify-content: center;
     opacity: 0;
+    pointer-events: none;   /* invisible → no click interception */
     transition: opacity 0.3s ease;
   }
 
   .lightbox.is-open {
     opacity: 1;
+    pointer-events: auto;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -186,9 +187,7 @@ const photos = [
     lastOpener = opener;
     lbImg.src  = src;
     lbImg.alt  = alt;
-    lightbox.removeAttribute('hidden');
     lightbox.setAttribute('aria-hidden', 'false');
-    // Trigger transition on next frame
     requestAnimationFrame(() => lightbox.classList.add('is-open'));
     closeBtn.focus();
     trapFocus(lightbox);
@@ -198,7 +197,6 @@ const photos = [
     lightbox.classList.remove('is-open');
     lightbox.setAttribute('aria-hidden', 'true');
     lightbox.addEventListener('transitionend', () => {
-      lightbox.setAttribute('hidden', '');
       lbImg.src = '';
     }, { once: true });
     lastOpener?.focus();

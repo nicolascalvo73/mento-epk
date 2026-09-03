@@ -76,6 +76,9 @@ a {
 }
 
 /* ─── Utility ────────────────────────────────────────────────── */
+/* Ensure [hidden] always wins over display rules in component CSS */
+[hidden] { display: none !important; }
+
 .sr-only {
   position: absolute;
   width: 1px;
