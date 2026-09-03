@@ -1,0 +1,156 @@
+---
+const stats = [
+  { value: '120K', label: 'monthly listeners' },
+  { value: '80+',  label: 'live shows' },
+  { value: '12',   label: 'countries reached' },
+];
+---
+
+<section id="bio" class="section bio" aria-labelledby="bio-heading">
+  <div class="section__inner bio__inner">
+
+    <div class="bio__text">
+      <p class="bio__short" id="bio-heading">
+        mento makes music for the restless. Somewhere between post-punk and
+        slow-burning shoegaze, their songs feel like cities at 3am — familiar
+        and a little dangerous.
+      </p>
+
+      <details class="bio__extended">
+        <summary class="bio__extended-toggle">Read more</summary>
+        <div class="bio__extended-body">
+          <p>
+            Formed in 2019, mento spent their first two years playing
+            underground venues and recording in a basement studio they built
+            themselves. Their debut EP <em>Espejo</em> (2021) spread quietly
+            through online communities before landing on editorial playlists
+            across Europe and South America.
+          </p>
+          <p>
+            Their sound draws from the tension between control and release —
+            tight, precise arrangements that suddenly give way to walls of
+            reverb-drenched guitar. The result is music that rewards patience
+            and punishes distraction.
+          </p>
+          <p>
+            In 2023 they released <em>Noche Larga</em>, their first full-length,
+            recorded live to tape over five days. It charted independently in
+            five countries.
+          </p>
+        </div>
+      </details>
+    </div>
+
+    <ul class="bio__stats" aria-label="Band statistics">
+      {stats.map(({ value, label }) => (
+        <li class="bio__stat">
+          <span class="bio__stat-value" data-count-to={value}>{value}</span>
+          <span class="bio__stat-label">{label}</span>
+        </li>
+      ))}
+    </ul>
+
+  </div>
+</section>
+
+<style>
+  .bio__inner {
+    display: grid;
+    gap: var(--space-lg);
+
+    @media (min-width: 768px) {
+      grid-template-columns: 1fr 1fr;
+      align-items: start;
+    }
+  }
+
+  .bio__short {
+    font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+    line-height: 1.6;
+    color: var(--color-text);
+    font-family: var(--font-display);
+  }
+
+  .bio__extended {
+    margin-top: var(--space-md);
+  }
+
+  .bio__extended-toggle {
+    cursor: pointer;
+    color: var(--color-accent);
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    list-style: none;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    border: none;
+    background: none;
+    padding: 0;
+  }
+
+  .bio__extended-toggle::after {
+    content: '↓';
+    display: inline-block;
+    transition: transform 0.3s ease;
+  }
+
+  .bio__extended[open] .bio__extended-toggle::after {
+    transform: rotate(180deg);
+  }
+
+  .bio__extended-body {
+    margin-top: var(--space-sm);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    color: var(--color-text);
+    opacity: 0.8;
+    line-height: 1.7;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .bio__extended-body {
+      animation: fade-in 0.3s ease;
+    }
+  }
+
+  @keyframes fade-in {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 0.8; transform: translateY(0); }
+  }
+
+  .bio__stats {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+
+    @media (min-width: 480px) and (max-width: 767px) {
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+  }
+
+  .bio__stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .bio__stat-value {
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-family: var(--font-display);
+    font-weight: 400;
+    color: var(--color-text);
+    line-height: 1;
+  }
+
+  .bio__stat-label {
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+</style>

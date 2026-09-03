@@ -1,0 +1,15 @@
+{
+  "name": "mento-website",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "astro": "^7.2.10",
+    "gsap": "^3.15.0",
+    "lenis": "^1.3.26"
+  }
+}

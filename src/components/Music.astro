@@ -1,0 +1,123 @@
+---
+/*
+  Structure ready for mixed platform embeds.
+  Add real embed URLs/IDs when available; comment out platforms not yet active.
+  Each platform renders its embed in a responsive wrapper.
+*/
+
+interface EmbedItem {
+  platform: 'spotify' | 'youtube' | 'bandcamp' | 'soundcloud' | 'apple' | 'deezer' | 'mixcloud' | 'audiomack';
+  label: string;
+  embedHtml?: string; // raw iframe HTML from the platform
+  placeholder?: true;
+}
+
+const embeds: EmbedItem[] = [
+  {
+    platform: 'spotify',
+    label: 'Listen on Spotify',
+    placeholder: true,
+    // embedHtml: `<iframe src="https://open.spotify.com/embed/album/ALBUM_ID" ...></iframe>`,
+  },
+  {
+    platform: 'youtube',
+    label: 'Watch on YouTube',
+    placeholder: true,
+    // embedHtml: `<iframe src="https://www.youtube.com/embed/VIDEO_ID" ...></iframe>`,
+  },
+  {
+    platform: 'bandcamp',
+    label: 'Support on Bandcamp',
+    placeholder: true,
+    // embedHtml: `<iframe src="https://bandcamp.com/EmbeddedPlayer/..." ...></iframe>`,
+  },
+  {
+    platform: 'soundcloud',
+    label: 'SoundCloud',
+    placeholder: true,
+  },
+  {
+    platform: 'apple',
+    label: 'Apple Music',
+    placeholder: true,
+  },
+  {
+    platform: 'deezer',
+    label: 'Deezer',
+    placeholder: true,
+  },
+];
+---
+
+<section id="music" class="section music" aria-labelledby="music-heading">
+  <div class="section__inner">
+    <h2 id="music-heading" class="section-label">Music</h2>
+
+    <div class="music__embeds">
+      {embeds.map(({ platform, label, embedHtml, placeholder }) => (
+        <div
+          class={`music__embed music__embed--${platform}`}
+          data-platform={platform}
+        >
+          {embedHtml
+            ? <Fragment set:html={embedHtml} />
+            : placeholder && (
+              <div class="music__placeholder" aria-label={label}>
+                <span class="music__platform-name">{platform}</span>
+                <span class="music__placeholder-hint">embed coming soon</span>
+              </div>
+            )
+          }
+        </div>
+      ))}
+    </div>
+
+  </div>
+</section>
+
+<style>
+  .music__embeds {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  /* Responsive embed wrapper — any platform iframe fills this */
+  .music__embed {
+    width: 100%;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  /* Ensure iframes are responsive */
+  .music__embed :global(iframe) {
+    width: 100%;
+    display: block;
+    border: none;
+  }
+
+  .music__placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-sm) var(--space-md);
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 4px;
+    min-height: 64px;
+  }
+
+  .music__platform-name {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+
+  .music__placeholder-hint {
+    font-size: 0.7rem;
+    color: var(--color-muted);
+    letter-spacing: 0.1em;
+  }
+</style>

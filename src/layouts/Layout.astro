@@ -1,0 +1,80 @@
+---
+import '@/styles/global.css';
+import ParallaxBackground from '@/components/ParallaxBackground.astro';
+import Logo from '@/components/Logo.astro';
+import VideoOverlay from '@/components/VideoOverlay.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'mento',
+  description = 'Indie rock.',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#0a0a0a" />
+    <title>{title}</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+
+  <body>
+    <ParallaxBackground />
+
+    <!-- Logo: fixed position, starts centered in Hero, shrinks to top-left on scroll -->
+    <div class="logo-wrapper" aria-hidden="true">
+      <Logo />
+    </div>
+
+    <main>
+      <slot />
+    </main>
+
+    <VideoOverlay />
+  </body>
+</html>
+
+<script>
+  import { initLenis } from '@/scripts/lenis';
+  import { initParallax } from '@/scripts/parallax';
+  import { initLogoAnimation } from '@/scripts/logo-animation';
+  import { initVideoCarousel } from '@/scripts/video-carousel';
+
+  // Boot order matters: Lenis first, then ScrollTrigger-dependent scripts
+  const lenis = initLenis();
+  initParallax();
+  initLogoAnimation();
+  initVideoCarousel();
+
+  // Expose lenis for debugging in dev
+  if (import.meta.env.DEV) {
+    (window as Window & { lenis?: typeof lenis }).lenis = lenis;
+  }
+</script>
+
+<style>
+  .logo-wrapper {
+    position: fixed;
+    z-index: var(--z-logo);
+    /* Initial: centered in viewport (hero state) */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: var(--logo-size-hero);
+    pointer-events: none; /* logo is decorative; sections beneath remain clickable */
+    /* When logo is in sticky state pointer-events can be re-enabled if needed */
+  }
+
+  /* In future: color theming per section */
+  .logo-wrapper[data-section='bio'] {
+    --logo-stroke: var(--color-bg);
+  }
+</style>

@@ -1,0 +1,38 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import Hero from '@/components/Hero.astro';
+import Bio from '@/components/Bio.astro';
+import Gallery from '@/components/Gallery.astro';
+import Music from '@/components/Music.astro';
+import VideoCarousel from '@/components/VideoCarousel.astro';
+import Subscribe from '@/components/Subscribe.astro';
+import Footer from '@/components/Footer.astro';
+---
+
+<Layout
+  title="mento"
+  description="mento — indie rock."
+>
+  <Hero />
+  <Bio />
+  <Gallery />
+  <Music />
+  <VideoCarousel />
+  <Subscribe />
+  <Footer />
+</Layout>
+
+<style>
+  /*
+    Section labels — shared across Bio, Gallery, Music, Video sections.
+    Defined here so they're global to index but scoped to the page.
+  */
+  :global(.section-label) {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    margin-bottom: var(--space-lg);
+  }
+</style>

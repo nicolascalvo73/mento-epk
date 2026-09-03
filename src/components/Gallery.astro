@@ -1,0 +1,79 @@
+---
+// Placeholder grid — replace items with real Image components when photos arrive in resources/
+const placeholders = Array.from({ length: 6 }, (_, i) => ({
+  id: i + 1,
+  alt: `mento — photo ${i + 1}`,
+}));
+---
+
+<section id="gallery" class="section gallery" aria-labelledby="gallery-heading">
+  <div class="section__inner">
+    <h2 id="gallery-heading" class="section-label">Photos</h2>
+
+    <ul class="gallery__grid" role="list">
+      {placeholders.map(({ id, alt }) => (
+        <li class="gallery__item">
+          <div class="gallery__placeholder" role="img" aria-label={alt}>
+            <span class="gallery__placeholder-num">{String(id).padStart(2, '0')}</span>
+          </div>
+        </li>
+      ))}
+    </ul>
+
+  </div>
+</section>
+
+<style>
+  .gallery__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2px;
+    list-style: none;
+
+    @media (min-width: 600px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    @media (min-width: 1024px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  /* First item spans 2 columns */
+  .gallery__item:first-child {
+    grid-column: span 2;
+
+    @media (min-width: 600px) {
+      grid-column: span 1;
+    }
+  }
+
+  .gallery__placeholder {
+    aspect-ratio: 3/4;
+    background-color: #1a1a1a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    transition: background-color 0.3s ease;
+  }
+
+  .gallery__item:first-child .gallery__placeholder {
+    aspect-ratio: 16/9;
+
+    @media (min-width: 600px) {
+      aspect-ratio: 3/4;
+    }
+  }
+
+  .gallery__placeholder:hover {
+    background-color: #222;
+  }
+
+  .gallery__placeholder-num {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--color-muted);
+    letter-spacing: 0.2em;
+  }
+</style>

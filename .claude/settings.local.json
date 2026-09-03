@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm --version)",
+      "Bash(npm show *)",
+      "Bash(npm install *)",
+      "Bash(node -e ' *)",
+      "Bash(python3 -c ' *)",
+      "Bash(ffmpeg -f lavfi -i \"color=c=0a0a14:size=1920x1080:rate=1\" -frames:v 1 src/assets/images/bg-placeholder.jpg)",
+      "Bash(node *)",
+      "Bash(npm run *)",
+      "Bash(git init *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)"
+    ]
+  }
+}

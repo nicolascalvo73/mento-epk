@@ -1,0 +1,66 @@
+---
+// Hero is intentionally minimal: the logo (rendered in Layout) fills this space.
+// This section provides the scroll distance that triggers the logo shrink animation.
+---
+
+<section id="hero" class="hero" aria-label="mento">
+  <!--
+    The visible "mento" logo lives in Layout as a fixed element.
+    This section's height is what ScrollTrigger uses as the scrub distance
+    for the logo shrink. Content here is the visual "behind" the logo.
+  -->
+  <div class="hero__tagline" aria-hidden="true">
+    <!-- Optional subtle tagline beneath logo; leave empty for now -->
+  </div>
+
+  <div class="hero__scroll-hint" aria-hidden="true">
+    <span class="hero__scroll-line"></span>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    height: 100svh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    padding-bottom: var(--space-lg);
+  }
+
+  .hero__scroll-hint {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-xs);
+    opacity: 0.4;
+    animation: hint-fade 2s ease-in-out infinite alternate;
+  }
+
+  .hero__scroll-line {
+    display: block;
+    width: 1px;
+    height: 60px;
+    background: linear-gradient(to bottom, transparent, var(--color-text));
+    animation: hint-grow 2s ease-in-out infinite alternate;
+  }
+
+  @keyframes hint-fade {
+    from { opacity: 0.2; }
+    to   { opacity: 0.5; }
+  }
+
+  @keyframes hint-grow {
+    from { transform: scaleY(0.5); }
+    to   { transform: scaleY(1); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero__scroll-hint,
+    .hero__scroll-line {
+      animation: none;
+      opacity: 0.3;
+    }
+  }
+</style>
