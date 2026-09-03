@@ -14,17 +14,43 @@ const photos = [
     <h2 id="gallery-heading" class="section-label">Photos</h2>
 
     <ul class="gallery__grid" role="list">
-      {photos.map(({ src, alt }) => (
+      {photos.map(({ src, alt }, i) => (
         <li class="gallery__item">
-          <img src={src} alt={alt} loading="lazy" decoding="async" class="gallery__img" />
+          <button
+            class="gallery__btn"
+            type="button"
+            aria-label={`Ver foto ${i + 1} en pantalla completa`}
+            data-src={src}
+            data-alt={alt}
+          >
+            <img src={src} alt={alt} loading="lazy" decoding="async" class="gallery__img" />
+          </button>
         </li>
       ))}
     </ul>
-
   </div>
 </section>
 
+<!-- Lightbox overlay -->
+<div
+  class="lightbox"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Foto en pantalla completa"
+  aria-hidden="true"
+  hidden
+>
+  <button class="lightbox__close" type="button" aria-label="Cerrar">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <line x1="4" y1="4" x2="20" y2="20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <line x1="20" y1="4" x2="4"  y2="20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+  </button>
+  <img class="lightbox__img" src="" alt="" />
+</div>
+
 <style>
+  /* ── Grid ─────────────────────────────────────────────────────────── */
   .gallery__grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -34,24 +60,36 @@ const photos = [
     @media (min-width: 600px) {
       grid-template-columns: repeat(3, 1fr);
     }
-
-    @media (min-width: 1024px) {
-      grid-template-columns: repeat(3, 1fr);
-    }
   }
 
-  /* First item spans 2 columns */
+  /* Image 1: 2 cols on mobile (full width), 2 cols on desktop (⅔ width) */
   .gallery__item:first-child {
     grid-column: span 2;
-
-    @media (min-width: 600px) {
-      grid-column: span 1;
-    }
   }
 
+  /* Image 6: always full width */
+  .gallery__item:last-child {
+    grid-column: 1 / -1;
+  }
+
+  /* ── Items & images ───────────────────────────────────────────────── */
   .gallery__item {
     overflow: hidden;
     background: #111;
+  }
+
+  .gallery__btn {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: zoom-in;
+  }
+
+  .gallery__btn:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: -2px;
   }
 
   .gallery__img {
@@ -62,18 +100,135 @@ const photos = [
     aspect-ratio: 3/4;
     transition: transform 0.5s ease, filter 0.5s ease;
     filter: grayscale(20%);
+    pointer-events: none;
   }
 
   .gallery__item:first-child .gallery__img {
     aspect-ratio: 16/9;
-
-    @media (min-width: 600px) {
-      aspect-ratio: 3/4;
-    }
   }
 
-  .gallery__item:hover .gallery__img {
+  .gallery__item:last-child .gallery__img {
+    aspect-ratio: 16/9;
+  }
+
+  .gallery__btn:hover .gallery__img,
+  .gallery__btn:focus-visible .gallery__img {
     transform: scale(1.04);
     filter: grayscale(0%);
   }
+
+  /* ── Lightbox ─────────────────────────────────────────────────────── */
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-overlay);
+    background: rgba(0, 0, 0, 0.92);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .lightbox.is-open {
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lightbox { transition: none; }
+    .lightbox__img { transition: none; }
+  }
+
+  .lightbox__img {
+    max-width: 92vw;
+    max-height: 92svh;
+    object-fit: contain;
+    display: block;
+    border-radius: 2px;
+    transform: scale(0.93);
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .lightbox.is-open .lightbox__img {
+    transform: scale(1);
+  }
+
+  .lightbox__close {
+    position: absolute;
+    top: var(--space-sm);
+    right: var(--space-sm);
+    color: rgba(255,255,255,0.7);
+    padding: var(--space-xs);
+    background: rgba(0,0,0,0.5);
+    border-radius: 50%;
+    line-height: 0;
+    transition: color 0.2s ease, background 0.2s ease;
+  }
+
+  .lightbox__close:hover {
+    color: white;
+    background: rgba(0,0,0,0.8);
+  }
+
+  .lightbox__close:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
 </style>
+
+<script>
+  const lightbox   = document.querySelector<HTMLElement>('.lightbox')!;
+  const lbImg      = lightbox.querySelector<HTMLImageElement>('.lightbox__img')!;
+  const closeBtn   = lightbox.querySelector<HTMLButtonElement>('.lightbox__close')!;
+  let lastOpener: HTMLElement | null = null;
+
+  function open(src: string, alt: string, opener: HTMLElement) {
+    lastOpener = opener;
+    lbImg.src  = src;
+    lbImg.alt  = alt;
+    lightbox.removeAttribute('hidden');
+    lightbox.setAttribute('aria-hidden', 'false');
+    // Trigger transition on next frame
+    requestAnimationFrame(() => lightbox.classList.add('is-open'));
+    closeBtn.focus();
+    trapFocus(lightbox);
+  }
+
+  function close() {
+    lightbox.classList.remove('is-open');
+    lightbox.setAttribute('aria-hidden', 'true');
+    lightbox.addEventListener('transitionend', () => {
+      lightbox.setAttribute('hidden', '');
+      lbImg.src = '';
+    }, { once: true });
+    lastOpener?.focus();
+  }
+
+  function trapFocus(el: HTMLElement) {
+    const focusable = el.querySelectorAll<HTMLElement>('button, [tabindex]:not([tabindex="-1"])');
+    const first = focusable[0];
+    const last  = focusable[focusable.length - 1];
+    el.addEventListener('keydown', function handler(e: KeyboardEvent) {
+      if (!el.classList.contains('is-open')) { el.removeEventListener('keydown', handler); return; }
+      if (e.key !== 'Tab') return;
+      if (e.shiftKey ? document.activeElement === first : document.activeElement === last) {
+        e.preventDefault();
+        (e.shiftKey ? last : first).focus();
+      }
+    });
+  }
+
+  // Open on thumbnail click
+  document.querySelectorAll<HTMLButtonElement>('.gallery__btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      open(btn.dataset.src!, btn.dataset.alt!, btn);
+    });
+  });
+
+  // Close handlers
+  closeBtn.addEventListener('click', close);
+  lightbox.addEventListener('click', e => { if (e.target === lightbox) close(); });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && lightbox.classList.contains('is-open')) close();
+  });
+</script>
