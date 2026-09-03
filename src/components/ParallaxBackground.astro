@@ -1,6 +1,6 @@
 ---
 import { Image } from 'astro:assets';
-import bgPlaceholder from '@/assets/images/bg-placeholder.jpg';
+import bgImage from '@/assets/images/background.jpg';
 ---
 
 <!--
@@ -11,7 +11,7 @@ import bgPlaceholder from '@/assets/images/bg-placeholder.jpg';
 -->
 <div class="parallax-container" aria-hidden="true">
   <Image
-    src={bgPlaceholder}
+    src={bgImage}
     alt=""
     class="parallax-bg"
     widths={[768, 1280, 1920]}
