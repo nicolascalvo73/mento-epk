@@ -6,30 +6,106 @@ interface CarouselState {
 
 const state: CarouselState = { activeOverlayVideo: null };
 
-// ─── Lazy load via IntersectionObserver ─────────────────────────────────────
+const AUTO_ADVANCE_MS = 60_000;
 
-function initLazyVideos(): void {
-  const videos = document.querySelectorAll<HTMLVideoElement>('.carousel__video[data-src]');
+// ─── Horizontal slider: one clip visible, auto-advances every minute ────────
 
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        const video = entry.target as HTMLVideoElement;
-        if (entry.isIntersecting) {
-          if (!video.src || video.src === window.location.href) {
+function initCarouselSlider(): void {
+  const root = document.querySelector<HTMLElement>('.carousel');
+  const track = root?.querySelector<HTMLElement>('.carousel__track');
+  const slides = Array.from(root?.querySelectorAll<HTMLElement>('.carousel__slide') ?? []);
+  const dots = Array.from(root?.querySelectorAll<HTMLButtonElement>('.carousel__dot') ?? []);
+  const prevBtn = root?.querySelector<HTMLButtonElement>('.carousel__nav--prev');
+  const nextBtn = root?.querySelector<HTMLButtonElement>('.carousel__nav--next');
+  if (!root || !track || slides.length === 0) return;
+
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  let index = 0;
+  let timer: ReturnType<typeof setInterval> | null = null;
+  let inView = false;
+
+  const videoOf = (slide: HTMLElement) => slide.querySelector<HTMLVideoElement>('.carousel__video');
+
+  function render(): void {
+    track.style.transform = `translateX(-${index * 100}%)`;
+
+    slides.forEach((slide, i) => {
+      const video = videoOf(slide);
+      if (!video) return;
+      if (i === index) {
+        if (inView) {
+          if (!video.src) {
             video.src = video.dataset.src ?? '';
             video.load();
           }
           video.play().catch(() => {/* autoplay blocked, silently ignore */});
-        } else {
-          video.pause();
         }
-      });
-    },
-    { rootMargin: '200px 0px', threshold: 0.1 }
-  );
+      } else {
+        video.pause();
+      }
+    });
 
-  videos.forEach((v) => observer.observe(v));
+    dots.forEach((dot, i) => {
+      dot.classList.toggle('is-active', i === index);
+      dot.setAttribute('aria-selected', i === index ? 'true' : 'false');
+    });
+  }
+
+  function goTo(target: number): void {
+    index = (target + slides.length) % slides.length;
+    render();
+  }
+
+  function stopTimer(): void {
+    if (timer) {
+      clearInterval(timer);
+      timer = null;
+    }
+  }
+
+  function startTimer(): void {
+    if (prefersReduced || slides.length < 2) return;
+    stopTimer();
+    timer = setInterval(() => goTo(index + 1), AUTO_ADVANCE_MS);
+  }
+
+  prevBtn?.addEventListener('click', () => { goTo(index - 1); startTimer(); });
+  nextBtn?.addEventListener('click', () => { goTo(index + 1); startTimer(); });
+  dots.forEach((dot) => {
+    dot.addEventListener('click', () => {
+      goTo(Number(dot.dataset.index ?? 0));
+      startTimer();
+    });
+  });
+
+  // Auto-advance is a moving-content pattern (WCAG 2.2.2): pause it on
+  // hover/focus so it never fights someone reading or interacting with it.
+  root.addEventListener('pointerenter', stopTimer);
+  root.addEventListener('pointerleave', () => { if (inView) startTimer(); });
+  root.addEventListener('focusin', stopTimer);
+  root.addEventListener('focusout', (e) => {
+    if (inView && !root.contains(e.relatedTarget as Node | null)) startTimer();
+  });
+
+  // Only load/play/auto-advance once the carousel is actually on screen.
+  const visibility = new IntersectionObserver(
+    (entries) => {
+      const entry = entries[0];
+      inView = entry.isIntersecting;
+      if (inView) {
+        render();
+        startTimer();
+      } else {
+        stopTimer();
+        slides.forEach((slide) => videoOf(slide)?.pause());
+      }
+    },
+    { threshold: 0.3 }
+  );
+  visibility.observe(root);
+
+  render();
 }
 
 // ─── Overlay open / close ────────────────────────────────────────────────────
@@ -104,24 +180,6 @@ function trapFocus(container: HTMLElement): void {
   }, { once: true });
 }
 
-// ─── Pause control (accessibility: mute/unmute carousel thumbs) ──────────────
-
-function initPauseControls(): void {
-  document.querySelectorAll<HTMLButtonElement>('.carousel__pause-btn').forEach((btn) => {
-    const item = btn.closest<HTMLElement>('.carousel__item');
-    const video = item?.querySelector<HTMLVideoElement>('.carousel__video');
-    if (!video) return;
-
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation(); // don't trigger overlay open
-      const paused = video.paused;
-      paused ? video.play() : video.pause();
-      btn.setAttribute('aria-pressed', paused ? 'false' : 'true');
-      btn.setAttribute('aria-label', paused ? 'Pausar video' : 'Reproducir video');
-    });
-  });
-}
-
 // ─── Carousel click → overlay ────────────────────────────────────────────────
 
 function initCarouselClicks(): void {
@@ -132,14 +190,6 @@ function initCarouselClicks(): void {
       if (!src) return;
       item.classList.add('was-active');
       openOverlay(src);
-    });
-
-    // Keyboard: Enter or Space opens overlay
-    item.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        item.click();
-      }
     });
   });
 }
@@ -166,8 +216,7 @@ function initOverlayClose(): void {
 // ─── Entry point ─────────────────────────────────────────────────────────────
 
 export function initVideoCarousel(): void {
-  initLazyVideos();
-  initPauseControls();
+  initCarouselSlider();
   initCarouselClicks();
   initOverlayClose();
 }

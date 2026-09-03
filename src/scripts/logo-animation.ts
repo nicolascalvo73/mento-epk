@@ -35,6 +35,9 @@ export function initLogoAnimation(): void {
       stagger: 0.1,
       ease: 'power3.out',
       delay: 0.25,
+      onComplete: () => {
+        document.querySelector('.parallax-bg')?.classList.add('is-visible');
+      },
     });
   }
 

@@ -7,9 +7,9 @@ const ACTION_URL = 'https://buttondown.email/BUTTONDOWN_USERNAME';
   <div class="section__inner subscribe__inner">
 
     <div class="subscribe__copy">
-      <h2 id="subscribe-heading" class="subscribe__heading">Stay close</h2>
+      <h2 id="subscribe-heading" class="subscribe__heading">Quedate cerca</h2>
       <p class="subscribe__sub">
-        No noise. We write when something is worth writing about.
+        Sin ruido. Escribimos solo cuando vale la pena.
       </p>
     </div>
 
@@ -20,25 +20,25 @@ const ACTION_URL = 'https://buttondown.email/BUTTONDOWN_USERNAME';
       aria-label="Email subscription form"
     >
       <div class="subscribe__field">
-        <label for="subscribe-email" class="sr-only">Email address</label>
+        <label for="subscribe-email" class="sr-only">Correo electrónico</label>
         <input
           id="subscribe-email"
           type="email"
           name="email"
-          placeholder="your@email.com"
+          placeholder="tu@email.com"
           required
           autocomplete="email"
           class="subscribe__input"
           aria-required="true"
         />
-        <button type="submit" class="subscribe__btn" aria-label="Subscribe">
+        <button type="submit" class="subscribe__btn" aria-label="Suscribirse">
           <span aria-hidden="true">→</span>
-          <span class="sr-only">Subscribe</span>
+          <span class="sr-only">Suscribirse</span>
         </button>
       </div>
 
       <p class="subscribe__fine">
-        No spam. Unsubscribe anytime. Powered by
+        Sin spam. Cancelá cuando quieras. Con
         <a href="https://buttondown.email" rel="noopener noreferrer" target="_blank">Buttondown</a>.
       </p>
     </form>
@@ -63,6 +63,7 @@ const ACTION_URL = 'https://buttondown.email/BUTTONDOWN_USERNAME';
     font-weight: 400;
     color: var(--color-text);
     line-height: 1.1;
+    scroll-margin-top: 3rem;
   }
 
   .subscribe__sub {

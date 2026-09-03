@@ -62,14 +62,12 @@ const platformLinks = [
       </div>
     </div>
 
-    <!-- Other platforms -->
+    <!-- Other platforms: links go live once real URLs replace the '#' placeholders -->
     <ul class="music__platforms" aria-label="Otras plataformas">
       {platformLinks.map(({ name, href }) => (
-        <li>
-          <a href={href} class="music__platform-pill" target="_blank" rel="noopener noreferrer">
-            {name}
-          </a>
-        </li>
+        href === '#'
+          ? <li><span class="music__platform-pill music__platform-pill--soon" aria-label={`${name} — próximamente`}>{name}</span></li>
+          : <li><a href={href} class="music__platform-pill" target="_blank" rel="noopener noreferrer">{name}</a></li>
       ))}
     </ul>
 
@@ -171,5 +169,15 @@ const platformLinks = [
   .music__platform-pill:focus-visible {
     outline: 2px solid var(--color-accent);
     outline-offset: 2px;
+  }
+
+  .music__platform-pill--soon {
+    cursor: default;
+    opacity: 0.45;
+  }
+
+  .music__platform-pill--soon:hover {
+    color: var(--color-muted);
+    border-color: var(--color-line);
   }
 </style>

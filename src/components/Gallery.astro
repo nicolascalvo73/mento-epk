@@ -11,7 +11,7 @@ const photos = [
 
 <section id="gallery" class="section gallery" aria-labelledby="gallery-heading">
   <div class="section__inner">
-    <h2 id="gallery-heading" class="section-label">Photos</h2>
+    <h2 id="gallery-heading" class="section-label">Fotos</h2>
 
     <ul class="gallery__grid" role="list">
       {photos.map(({ src, alt }, i) => (
@@ -102,8 +102,11 @@ const photos = [
     pointer-events: none;
   }
 
+  /* 3/2 (not 16/9) so this 2-col-wide cell's own aspect-ratio height
+     matches the adjacent 1-col cell's 3/4 height at their ~2:1 width ratio —
+     avoids leaving empty item background below a shorter first photo. */
   .gallery__item:first-child .gallery__img {
-    aspect-ratio: 16/9;
+    aspect-ratio: 3/2;
   }
 
   .gallery__item:last-child .gallery__img {

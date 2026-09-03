@@ -15,5 +15,12 @@ export default defineConfig({
         localsConvention: 'camelCase',
       },
     },
+    // Chokidar's native fs events don't fire reliably for files under /mnt/c
+    // (WSL <-> Windows filesystem), so HMR silently misses edits without this.
+    server: {
+      watch: {
+        usePolling: true,
+      },
+    },
   },
 });

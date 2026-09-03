@@ -37,12 +37,13 @@ import bgImage from '@/assets/images/background.jpg';
     object-fit: cover;
     object-position: center;
     filter: brightness(0.5);
-    animation: bg-fadein 3s ease forwards;
+    opacity: 0;
+    transition: opacity 1s ease;
   }
 
-  @keyframes bg-fadein {
-    from { opacity: 0; }
-    to   { opacity: 1; }
+  /* Added once the logo draw-in finishes (logo-animation.ts) */
+  .parallax-bg.is-visible {
+    opacity: 1;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -50,7 +51,8 @@ import bgImage from '@/assets/images/background.jpg';
       inset: 0;
     }
     .parallax-bg {
-      animation: none;
+      opacity: 1;
+      transition: none;
     }
   }
 </style>

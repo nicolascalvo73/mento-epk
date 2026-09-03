@@ -44,8 +44,10 @@ a {
   --color-bg-2: #16120f;
   --color-text: #f1e9df;
   --color-text-dim: #cabfb2;
-  --color-accent: #d47f34;
-  --color-ember: #9a5220;
+  /* Bordó tomado del favicon (#9f011a muestreado), aclarado lo justo para
+     mantener 4.5:1 de contraste sobre --color-bg cuando se usa en texto. */
+  --color-accent: #d84459;
+  --color-ember: #9f011a;
   --color-muted: #948a80;
   --color-line: rgba(241, 233, 223, 0.12);
   --color-overlay: rgba(6, 5, 4, 0.92);
@@ -72,6 +74,7 @@ a {
   --z-bg: -1;
   --z-content: 1;
   --z-logo: 10;
+  --z-nav: 20;
   --z-overlay: 100;
 }
 

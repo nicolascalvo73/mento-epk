@@ -2,6 +2,7 @@
 import '@/styles/global.css';
 import ParallaxBackground from '@/components/ParallaxBackground.astro';
 import Logo from '@/components/Logo.astro';
+import SectionNav from '@/components/SectionNav.astro';
 import VideoOverlay from '@/components/VideoOverlay.astro';
 
 interface Props {
@@ -23,7 +24,7 @@ const {
     <meta name="description" content={description} />
     <meta name="theme-color" content="#0a0907" />
     <title>{title}</title>
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
@@ -41,6 +42,7 @@ const {
       <slot />
     </main>
 
+    <SectionNav />
     <VideoOverlay />
   </body>
 </html>
