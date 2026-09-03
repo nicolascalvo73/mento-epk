@@ -1,123 +1,175 @@
 ---
-/*
-  Structure ready for mixed platform embeds.
-  Add real embed URLs/IDs when available; comment out platforms not yet active.
-  Each platform renders its embed in a responsive wrapper.
-*/
-
-interface EmbedItem {
-  platform: 'spotify' | 'youtube' | 'bandcamp' | 'soundcloud' | 'apple' | 'deezer' | 'mixcloud' | 'audiomack';
-  label: string;
-  embedHtml?: string; // raw iframe HTML from the platform
-  placeholder?: true;
-}
-
-const embeds: EmbedItem[] = [
-  {
-    platform: 'spotify',
-    label: 'Listen on Spotify',
-    placeholder: true,
-    // embedHtml: `<iframe src="https://open.spotify.com/embed/album/ALBUM_ID" ...></iframe>`,
-  },
-  {
-    platform: 'youtube',
-    label: 'Watch on YouTube',
-    placeholder: true,
-    // embedHtml: `<iframe src="https://www.youtube.com/embed/VIDEO_ID" ...></iframe>`,
-  },
-  {
-    platform: 'bandcamp',
-    label: 'Support on Bandcamp',
-    placeholder: true,
-    // embedHtml: `<iframe src="https://bandcamp.com/EmbeddedPlayer/..." ...></iframe>`,
-  },
-  {
-    platform: 'soundcloud',
-    label: 'SoundCloud',
-    placeholder: true,
-  },
-  {
-    platform: 'apple',
-    label: 'Apple Music',
-    placeholder: true,
-  },
-  {
-    platform: 'deezer',
-    label: 'Deezer',
-    placeholder: true,
-  },
+// Other platform links (not embedded, linked only)
+const platformLinks = [
+  { name: 'Bandcamp',   href: '#' },
+  { name: 'SoundCloud', href: '#' },
+  { name: 'Apple Music',href: '#' },
+  { name: 'Deezer',     href: '#' },
 ];
 ---
 
 <section id="music" class="section music" aria-labelledby="music-heading">
   <div class="section__inner">
-    <h2 id="music-heading" class="section-label">Music</h2>
+    <h2 id="music-heading" class="section-label">Escuchar</h2>
 
-    <div class="music__embeds">
-      {embeds.map(({ platform, label, embedHtml, placeholder }) => (
-        <div
-          class={`music__embed music__embed--${platform}`}
-          data-platform={platform}
+    <!-- Spotify -->
+    <div class="music__block">
+      <div class="music__embed music__embed--spotify">
+        <iframe
+          src="https://open.spotify.com/embed/track/3OjkcwHYFfBZzEmJx7hopF?utm_source=generator&theme=0"
+          title="mento — Dirac en Spotify"
+          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+          loading="lazy"
+          height="152"
+        ></iframe>
+      </div>
+      <div class="music__meta">
+        <span class="music__platform-label">Spotify · más escuchado</span>
+        <a
+          href="https://open.spotify.com/artist/1BHJGu9ALU5X7hctiGFRZa"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="music__link"
+          aria-label="Ver discografía completa en Spotify"
         >
-          {embedHtml
-            ? <Fragment set:html={embedHtml} />
-            : placeholder && (
-              <div class="music__placeholder" aria-label={label}>
-                <span class="music__platform-name">{platform}</span>
-                <span class="music__placeholder-hint">embed coming soon</span>
-              </div>
-            )
-          }
-        </div>
-      ))}
+          discografía completa ↗
+        </a>
+      </div>
     </div>
+
+    <!-- YouTube -->
+    <div class="music__block">
+      <div class="music__embed music__embed--youtube">
+        <iframe
+          src="https://www.youtube-nocookie.com/embed/oTUsKMvaBqk?rel=0&modestbranding=1"
+          title="mento — Invierno (feat. Edu Valdes)"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen
+          loading="lazy"
+        ></iframe>
+      </div>
+      <div class="music__meta">
+        <span class="music__platform-label">YouTube · Invierno feat. Edu Valdes · dir. Julián Farell</span>
+        <a
+          href="https://www.youtube.com/watch?v=oTUsKMvaBqk"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="music__link"
+          aria-label="Ver en YouTube"
+        >
+          ver en YouTube ↗
+        </a>
+      </div>
+    </div>
+
+    <!-- Other platforms -->
+    <ul class="music__platforms" aria-label="Otras plataformas">
+      {platformLinks.map(({ name, href }) => (
+        <li>
+          <a href={href} class="music__platform-pill" target="_blank" rel="noopener noreferrer">
+            {name}
+          </a>
+        </li>
+      ))}
+    </ul>
 
   </div>
 </section>
 
 <style>
-  .music__embeds {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-md);
+  .music__block {
+    margin-bottom: var(--space-lg);
   }
 
-  /* Responsive embed wrapper — any platform iframe fills this */
   .music__embed {
-    width: 100%;
-    border-radius: 4px;
+    border-radius: 10px;
     overflow: hidden;
+    border: 1px solid var(--color-line);
+    background: #16120f;
+    line-height: 0;
   }
 
-  /* Ensure iframes are responsive */
-  .music__embed :global(iframe) {
+  .music__embed iframe {
     width: 100%;
     display: block;
     border: none;
   }
 
-  .music__placeholder {
+  .music__embed--youtube iframe {
+    aspect-ratio: 16 / 9;
+    height: auto;
+  }
+
+  .music__meta {
+    margin-top: 0.85rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: var(--space-sm) var(--space-md);
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 4px;
-    min-height: 64px;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--color-line);
   }
 
-  .music__platform-name {
+  .music__platform-label {
     font-family: var(--font-mono);
-    font-size: 0.8rem;
-    letter-spacing: 0.15em;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--color-accent);
+    color: var(--color-muted);
   }
 
-  .music__placeholder-hint {
-    font-size: 0.7rem;
+  .music__link {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    color: var(--color-text-dim);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .music__link:hover,
+  .music__link:focus-visible {
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+  }
+
+  .music__link:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    border-radius: 1px;
+  }
+
+  .music__platforms {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    list-style: none;
+    margin-top: var(--space-md);
+  }
+
+  .music__platform-pill {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
     color: var(--color-muted);
-    letter-spacing: 0.1em;
+    text-decoration: none;
+    padding: 0.35rem 0.75rem;
+    border: 1px solid var(--color-line);
+    border-radius: 2px;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .music__platform-pill:hover,
+  .music__platform-pill:focus-visible {
+    color: var(--color-text-dim);
+    border-color: rgba(241, 233, 223, 0.3);
+  }
+
+  .music__platform-pill:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
   }
 </style>

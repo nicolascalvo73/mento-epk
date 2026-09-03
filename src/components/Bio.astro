@@ -1,9 +1,5 @@
 ---
-const stats = [
-  { value: '120K', label: 'monthly listeners' },
-  { value: '80+',  label: 'live shows' },
-  { value: '12',   label: 'countries reached' },
-];
+const singles = ['Dirac', 'Invierno', 'Lugar', 'Cristal', '1727'];
 ---
 
 <section id="bio" class="section bio" aria-labelledby="bio-heading">
@@ -11,64 +7,63 @@ const stats = [
 
     <div class="bio__text">
       <p class="bio__short" id="bio-heading">
-        mento makes music for the restless. Somewhere between post-punk and
-        slow-burning shoegaze, their songs feel like cities at 3am — familiar
-        and a little dangerous.
+        Somos Diego y Francisco. Hacemos rock alternativo con guitarras crudas
+        y letras que dicen la verdad a medias: atmósferas oscuras, melodías
+        directas, canciones que se cuelan cuando bajás la guardia.
       </p>
 
       <details class="bio__extended">
-        <summary class="bio__extended-toggle">Read more</summary>
+        <summary class="bio__extended-toggle">Leer más</summary>
         <div class="bio__extended-body">
           <p>
-            Formed in 2019, mento spent their first two years playing
-            underground venues and recording in a basement studio they built
-            themselves. Their debut EP <em>Espejo</em> (2021) spread quietly
-            through online communities before landing on editorial playlists
-            across Europe and South America.
+            No partimos de una fórmula: partimos de lo que nos pasa. Grabamos
+            lo áspero sin pulirlo de más, dejamos que el silencio ocupe su
+            lugar y que el ruido aparezca solo cuando la canción lo pide. Nos
+            interesa lo que queda cuando se cae la pose — el amor incómodo, la
+            libertad a medias, la búsqueda que no termina nunca del todo.
           </p>
           <p>
-            Their sound draws from the tension between control and release —
-            tight, precise arrangements that suddenly give way to walls of
-            reverb-drenched guitar. The result is music that rewards patience
-            and punishes distraction.
+            En vivo eso se estira: el dúo se agranda con banda, y cada tema
+            encuentra una versión más cruda y más nuestra arriba del escenario.
           </p>
           <p>
-            In 2023 they released <em>Noche Larga</em>, their first full-length,
-            recorded live to tape over five days. It charted independently in
-            five countries.
+            Empezamos a tocar juntos buscando un lugar donde el rock alternativo
+            pudiera decir las cosas sin adornos. De ahí nace mento: guitarras
+            crudas, arreglos que se permiten lo atmosférico, y letras
+            introspectivas sobre el amor, la libertad y la búsqueda de uno mismo.
           </p>
+          <p>
+            Nuestro primer ciclo de sencillos sentó las bases de un sonido que
+            no le teme al silencio ni al ruido — y que encuentra su versión más
+            completa en vivo, cuando nos agrandamos con banda y el público
+            responde tema por tema.
+          </p>
+          <p>
+            Hoy estamos trabajando en nuestro próximo disco, con material nuevo
+            en producción para los próximos lanzamientos.
+          </p>
+
+          <ul class="bio__singles" aria-label="Discografía">
+            {singles.map(s => <li>{s}</li>)}
+          </ul>
         </div>
       </details>
     </div>
-
-    <ul class="bio__stats" aria-label="Band statistics">
-      {stats.map(({ value, label }) => (
-        <li class="bio__stat">
-          <span class="bio__stat-value" data-count-to={value}>{value}</span>
-          <span class="bio__stat-label">{label}</span>
-        </li>
-      ))}
-    </ul>
 
   </div>
 </section>
 
 <style>
   .bio__inner {
-    display: grid;
-    gap: var(--space-lg);
-
-    @media (min-width: 768px) {
-      grid-template-columns: 1fr 1fr;
-      align-items: start;
-    }
+    max-width: 34rem;
   }
 
   .bio__short {
-    font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+    font-size: clamp(1.15rem, 3.2vw, 1.5rem);
     line-height: 1.6;
     color: var(--color-text);
-    font-family: var(--font-display);
+    font-family: var(--font-body);
+    font-weight: 400;
   }
 
   .bio__extended {
@@ -78,9 +73,10 @@ const stats = [
   .bio__extended-toggle {
     cursor: pointer;
     color: var(--color-accent);
-    font-size: 0.85rem;
-    letter-spacing: 0.1em;
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
+    font-family: var(--font-mono);
     list-style: none;
     display: inline-flex;
     align-items: center;
@@ -89,6 +85,9 @@ const stats = [
     background: none;
     padding: 0;
   }
+
+  .bio__extended-toggle::marker,
+  .bio__extended-toggle::-webkit-details-marker { display: none; }
 
   .bio__extended-toggle::after {
     content: '↓';
@@ -105,52 +104,43 @@ const stats = [
     display: flex;
     flex-direction: column;
     gap: var(--space-sm);
-    color: var(--color-text);
-    opacity: 0.8;
-    line-height: 1.7;
+    color: var(--color-text-dim);
+    line-height: 1.8;
+    font-size: 1rem;
   }
 
   @media (prefers-reduced-motion: no-preference) {
     .bio__extended-body {
-      animation: fade-in 0.3s ease;
+      animation: bio-fade 0.3s ease;
     }
   }
 
-  @keyframes fade-in {
-    from { opacity: 0; transform: translateY(-8px); }
-    to   { opacity: 0.8; transform: translateY(0); }
+  @keyframes bio-fade {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
   }
 
-  .bio__stats {
+  .bio__singles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1rem;
     list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-md);
-
-    @media (min-width: 480px) and (max-width: 767px) {
-      flex-direction: row;
-      flex-wrap: wrap;
-    }
+    margin-top: var(--space-sm);
+    padding-top: var(--space-sm);
+    border-top: 1px solid var(--color-line);
   }
 
-  .bio__stat {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
+  .bio__singles li {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    color: var(--color-muted);
   }
 
-  .bio__stat-value {
-    font-size: clamp(2.5rem, 6vw, 4rem);
-    font-family: var(--font-display);
-    font-weight: 400;
-    color: var(--color-text);
-    line-height: 1;
-  }
-
-  .bio__stat-label {
-    font-size: 0.75rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
+  .bio__singles li::before {
+    content: '· ';
     color: var(--color-accent);
   }
+
+  .bio__singles li:first-child::before { content: ''; }
 </style>

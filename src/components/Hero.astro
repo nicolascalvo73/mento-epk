@@ -9,9 +9,7 @@
     This section's height is what ScrollTrigger uses as the scrub distance
     for the logo shrink. Content here is the visual "behind" the logo.
   -->
-  <div class="hero__tagline" aria-hidden="true">
-    <!-- Optional subtle tagline beneath logo; leave empty for now -->
-  </div>
+  <p class="hero__tagline">Hacemos el ruido que se queda después del silencio.</p>
 
   <div class="hero__scroll-hint" aria-hidden="true">
     <span class="hero__scroll-line"></span>
@@ -27,6 +25,18 @@
     align-items: center;
     justify-content: flex-end;
     padding-bottom: var(--space-lg);
+  }
+
+  .hero__tagline {
+    font-family: var(--font-body);
+    font-size: clamp(0.85rem, 2vw, 1.1rem);
+    color: var(--color-text-dim);
+    letter-spacing: 0.02em;
+    text-align: center;
+    max-width: 28rem;
+    line-height: 1.5;
+    margin-bottom: var(--space-lg);
+    opacity: 0.75;
   }
 
   .hero__scroll-hint {

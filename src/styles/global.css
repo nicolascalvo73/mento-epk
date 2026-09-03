@@ -40,16 +40,20 @@ a {
 /* ─── Design tokens ─────────────────────────────────────────── */
 :root {
   /* Colors */
-  --color-bg: #0a0a0a;
-  --color-text: #f0ede8;
-  --color-accent: #c8b89a;
-  --color-muted: #555;
-  --color-overlay: rgba(0, 0, 0, 0.85);
+  --color-bg: #0a0907;
+  --color-bg-2: #16120f;
+  --color-text: #f1e9df;
+  --color-text-dim: #cabfb2;
+  --color-accent: #d47f34;
+  --color-ember: #9a5220;
+  --color-muted: #948a80;
+  --color-line: rgba(241, 233, 223, 0.12);
+  --color-overlay: rgba(6, 5, 4, 0.92);
 
   /* Typography */
-  --font-display: 'Georgia', serif;
-  --font-body: system-ui, -apple-system, sans-serif;
-  --font-mono: 'Courier New', monospace;
+  --font-display: 'Archivo Black', 'Arial Black', sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'Space Mono', 'SFMono-Regular', monospace;
 
   /* Spacing scale */
   --space-xs: 0.5rem;
