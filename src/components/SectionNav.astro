@@ -5,10 +5,9 @@
 const sections = [
   { id: 'hero', headingId: 'hero', label: 'Inicio' },
   { id: 'bio', headingId: 'bio-heading', label: 'Bio' },
+  { id: 'video', headingId: 'video-heading', label: 'Video' },
   { id: 'gallery', headingId: 'gallery-heading', label: 'Fotos' },
   { id: 'music', headingId: 'music-heading', label: 'Escuchar' },
-  { id: 'video', headingId: 'video-heading', label: 'Video' },
-  { id: 'subscribe', headingId: 'subscribe-heading', label: 'Quedate cerca' },
 ];
 ---
 
@@ -185,7 +184,7 @@ const sections = [
     for (const { el } of entries) observer.observe(el);
 
     // The center-band observer can't see past the last section into the
-    // (untracked) footer, so it goes stale once you scroll past Subscribe.
+    // (untracked) footer, so it goes stale once you scroll past Music.
     // Force the last section active once the page is scrolled to its end.
     const lastId = entries[entries.length - 1].el.id;
     const checkBottom = () => {

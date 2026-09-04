@@ -6,9 +6,9 @@ interface CarouselState {
 
 const state: CarouselState = { activeOverlayVideo: null };
 
-const AUTO_ADVANCE_MS = 60_000;
+const AUTO_ADVANCE_MS = 6_000;
 
-// ─── Horizontal slider: one clip visible, auto-advances every minute ────────
+// ─── Crossfade slider: one clip visible, auto-advances on a timer ───────────
 
 function initCarouselSlider(): void {
   const root = document.querySelector<HTMLElement>('.carousel');
@@ -28,9 +28,9 @@ function initCarouselSlider(): void {
   const videoOf = (slide: HTMLElement) => slide.querySelector<HTMLVideoElement>('.carousel__video');
 
   function render(): void {
-    track.style.transform = `translateX(-${index * 100}%)`;
-
     slides.forEach((slide, i) => {
+      slide.classList.toggle('is-active', i === index);
+
       const video = videoOf(slide);
       if (!video) return;
       if (i === index) {
@@ -124,6 +124,9 @@ function openOverlay(src: string): void {
   ovVideo.play().catch(() => {});
   state.activeOverlayVideo = ovVideo;
 
+  // Auto-close once the clip finishes, returning focus to the carousel.
+  ovVideo.addEventListener('ended', closeOverlay, { once: true });
+
   // Trap focus inside overlay
   trapFocus(overlay);
 }
@@ -138,6 +141,7 @@ function closeOverlay(): void {
 
   if (ovVideo) {
     ovVideo.pause();
+    ovVideo.removeEventListener('ended', closeOverlay);
     ovVideo.src = '';
   }
 

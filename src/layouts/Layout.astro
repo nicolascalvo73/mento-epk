@@ -8,12 +8,20 @@ import VideoOverlay from '@/components/VideoOverlay.astro';
 interface Props {
   title?: string;
   description?: string;
+  image?: string;
 }
 
 const {
   title = 'mento',
   description = 'mento — rock alternativo.',
+  image = '/og-image.jpg',
 } = Astro.props;
+
+// Astro.site (set in astro.config.mjs) is what makes these absolute in the
+// build; without it they fall back to the current request's origin, which
+// is fine in dev but means social crawlers need `site` set once deployed.
+const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin);
+const socialImageURL = new URL(image, Astro.site ?? Astro.url.origin);
 ---
 
 <!doctype html>
@@ -24,10 +32,29 @@ const {
     <meta name="description" content={description} />
     <meta name="theme-color" content="#0a0907" />
     <title>{title}</title>
+    <link rel="canonical" href={canonicalURL} />
     <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+
+    <!-- Open Graph (Facebook, WhatsApp, Instagram, Slack, Discord, etc.) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="mento" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:image" content={socialImageURL} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="es_AR" />
+
+    <!-- Twitter/X card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImageURL} />
   </head>
 
   <body>
@@ -52,12 +79,15 @@ const {
   import { initParallax } from '@/scripts/parallax';
   import { initLogoAnimation } from '@/scripts/logo-animation';
   import { initVideoCarousel } from '@/scripts/video-carousel';
+  // Scroll-snap is disabled for now — see initScrollSnap in scroll-snap.ts
+  // import { initScrollSnap } from '@/scripts/scroll-snap';
 
   // Boot order matters: Lenis first, then ScrollTrigger-dependent scripts
   const lenis = initLenis();
   initParallax();
   initLogoAnimation();
   initVideoCarousel();
+  // initScrollSnap(lenis);
 
   // Expose lenis for debugging in dev
   if (import.meta.env.DEV) {
