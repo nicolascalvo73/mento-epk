@@ -90,24 +90,36 @@ const clips = [
   }
 
   /*
-    Slides crossfade via opacity instead of sliding via `transform:
-    translateX`. A translated, overflow:hidden ancestor around a hardware-
-    decoded <video> is a known trigger for a Chrome video-compositing bug
-    where the video punches through and shows whatever is behind the page
-    instead of its own content — reproduced here on the 2nd/3rd slide.
-    Stacking the slides with opacity sidesteps that combination entirely.
+    Slides animate via the `left` property, not `transform: translateX`.
+    A *transformed*, overflow:hidden ancestor around a hardware-decoded
+    <video> is a known trigger for a Chrome video-compositing bug where
+    the video punches through and shows whatever is behind the page
+    instead of its own content — reproduced here on the 2nd/3rd slide
+    when the track itself used to slide via transform. `left` triggers
+    normal layout instead of a composited transform, which sidesteps it.
   */
   .carousel__slide {
     position: absolute;
-    inset: 0;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.6s ease;
+    top: 0;
+    left: 100%;
+    width: 100%;
+    height: 100%;
+    transition: left 0.6s cubic-bezier(0.65, 0, 0.35, 1);
   }
 
   .carousel__slide.is-active {
-    opacity: 1;
-    visibility: visible;
+    left: 0%;
+  }
+
+  /* Outgoing slide: exits to the left while the next one enters from the right. */
+  .carousel__slide.is-prev {
+    left: -100%;
+  }
+
+  /* Instantly (no transition) snaps a just-exited slide back to its resting
+     position on the right, once JS has finished animating it out. */
+  .carousel__slide.is-resetting {
+    transition: none;
   }
 
   .carousel__item {

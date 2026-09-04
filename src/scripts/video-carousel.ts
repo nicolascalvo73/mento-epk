@@ -52,8 +52,32 @@ function initCarouselSlider(): void {
     });
   }
 
+  // Outgoing slide exits left (`is-prev`); once that transition finishes,
+  // snap it back to its resting position on the right (`transition: none`,
+  // forced reflow, re-enable) so it's ready to enter from the right again
+  // next time, instead of animating backward across the visible frame.
+  function armPrevReset(slide: HTMLElement): void {
+    const onEnd = (e: TransitionEvent) => {
+      if (e.propertyName !== 'left') return;
+      slide.removeEventListener('transitionend', onEnd);
+      slide.classList.add('is-resetting');
+      slide.classList.remove('is-prev');
+      void slide.offsetWidth; // force reflow so `transition: none` applies before removal
+      slide.classList.remove('is-resetting');
+    };
+    slide.addEventListener('transitionend', onEnd);
+  }
+
   function goTo(target: number): void {
-    index = (target + slides.length) % slides.length;
+    const nextIndex = (target + slides.length) % slides.length;
+    if (nextIndex === index) return;
+
+    const outgoing = slides[index];
+    outgoing.classList.remove('is-active');
+    outgoing.classList.add('is-prev');
+    armPrevReset(outgoing);
+
+    index = nextIndex;
     render();
   }
 
