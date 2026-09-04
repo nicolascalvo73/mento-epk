@@ -67,12 +67,25 @@ const singles = ['Dirac', 'Invierno', 'Lugar', 'Cristal', '1727'];
   }
 
   .bio__short {
+    position: relative;
+    z-index: 0;
     font-size: clamp(1.15rem, 3.2vw, 1.5rem);
     line-height: 1.6;
     color: var(--color-text);
     font-family: var(--font-body);
     font-weight: 400;
     scroll-margin-top: 3rem;
+  }
+
+  .bio__short::before {
+    content: '';
+    position: absolute;
+    inset: -1rem;
+    z-index: -1;
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 2px;
   }
 
   .bio__extended {

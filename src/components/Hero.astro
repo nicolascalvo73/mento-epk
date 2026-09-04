@@ -74,8 +74,6 @@ const socials = [
   }
 
   .hero__tagline {
-    position: relative;
-    z-index: 0;
     font-family: var(--font-body);
     font-size: clamp(0.85rem, 2vw, 1.1rem);
     color: var(--color-text-dim);
@@ -83,17 +81,6 @@ const socials = [
     text-align: center;
     max-width: 28rem;
     line-height: 1.5;
-  }
-
-  .hero__tagline::before {
-    content: '';
-    position: absolute;
-    inset: -1rem;
-    z-index: -1;
-    background: rgba(0, 0, 0, 0.35);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border-radius: 2px;
   }
 
   .hero__socials {

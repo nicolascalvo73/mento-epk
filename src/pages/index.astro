@@ -26,6 +26,9 @@ import Footer from '@/components/Footer.astro';
     Defined here so they're global to index but scoped to the page.
   */
   :global(.section-label) {
+    position: relative;
+    z-index: 0;
+    display: inline-block;
     font-family: var(--font-mono);
     font-size: 0.7rem;
     letter-spacing: 0.25em;
@@ -33,5 +36,16 @@ import Footer from '@/components/Footer.astro';
     color: var(--color-muted);
     margin-bottom: var(--space-lg);
     scroll-margin-top: 3rem;
+  }
+
+  :global(.section-label::before) {
+    content: '';
+    position: absolute;
+    inset: -1rem;
+    z-index: -1;
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 2px;
   }
 </style>
