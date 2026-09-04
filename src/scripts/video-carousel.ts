@@ -6,7 +6,7 @@ interface CarouselState {
 
 const state: CarouselState = { activeOverlayVideo: null };
 
-const AUTO_ADVANCE_MS = 6_000;
+const AUTO_ADVANCE_MS = 4_000;
 
 // ─── Crossfade slider: one clip visible, auto-advances on a timer ───────────
 
