@@ -5,3 +5,5 @@ dist/
 *.local
 # Playwright CLI output (may contain credentials)
 .playwright-cli/
+# Playwright MCP debugging screenshots/logs/snapshots
+.playwright-mcp/
