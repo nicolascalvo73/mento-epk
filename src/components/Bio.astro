@@ -83,8 +83,8 @@ const singles = ['Dirac', 'Invierno', 'Lugar', 'Cristal', '1727'];
     inset: -1rem;
     z-index: -1;
     background: rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     border-radius: 2px;
   }
 
@@ -123,7 +123,15 @@ const singles = ['Dirac', 'Invierno', 'Lugar', 'Cristal', '1727'];
   }
 
   .bio__extended-body {
-    margin-top: var(--space-sm);
+    /*
+      Backdrop is real padding + a matching negative margin, not an
+      absolutely-positioned ::before, because this element needs
+      `overflow: hidden` for the open/close animation — a pseudo-element
+      bleeding past its box via `inset: -1rem` would get clipped by that
+      same overflow instead of showing the 1rem bleed.
+    */
+    margin: var(--space-sm) -1rem 0 -1rem;
+    padding: 1rem;
     display: flex;
     flex-direction: column;
     gap: var(--space-sm);
@@ -131,6 +139,10 @@ const singles = ['Dirac', 'Invierno', 'Lugar', 'Cristal', '1727'];
     line-height: 1.8;
     font-size: 1rem;
     overflow: hidden;
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-radius: 2px;
   }
 
   @media (prefers-reduced-motion: no-preference) {
