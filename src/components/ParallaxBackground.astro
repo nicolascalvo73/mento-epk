@@ -26,7 +26,12 @@ import bgImage from '@/assets/images/background.jpg';
 <style>
   .parallax-container {
     position: fixed;
-    inset: -30% 0;   /* oversized so the parallax movement doesn't reveal edges */
+    /* Oversized so the vertical parallax scroll and the rightward shift
+       below don't reveal edges. GSAP animates .parallax-bg's own transform
+       for the scroll effect, so the static horizontal shift lives here on
+       the container instead, to avoid the two transforms fighting. */
+    inset: -30% -1.5rem;
+    transform: translateX(1.5rem);
     z-index: var(--z-bg);
     overflow: hidden;
   }
@@ -48,7 +53,7 @@ import bgImage from '@/assets/images/background.jpg';
 
   @media (prefers-reduced-motion: reduce) {
     .parallax-container {
-      inset: 0;
+      inset: 0 -1.5rem;
     }
     .parallax-bg {
       opacity: 1;
