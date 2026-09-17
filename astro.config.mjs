@@ -2,7 +2,6 @@ import { defineConfig } from 'astro/config';
 
 export default defineConfig({
   site: 'https://nicolascalvo73.github.io',
-  base: '/mento-epk/',
   output: 'static',
   build: {
     assets: '_assets',
