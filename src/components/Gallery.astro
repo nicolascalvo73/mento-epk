@@ -1,13 +1,29 @@
 ---
-const base = import.meta.env.BASE_URL;
-const photos = [
-  { src: `${base}images/01.jpg`, alt: 'mento' },
-  { src: `${base}images/02.jpg`, alt: 'mento' },
-  { src: `${base}images/03.jpg`, alt: 'mento' },
-  { src: `${base}images/04.jpg`, alt: 'mento' },
-  { src: `${base}images/05.jpg`, alt: 'mento' },
-  { src: `${base}images/06.jpg`, alt: 'mento' },
+import { Image, getImage } from 'astro:assets';
+import photo01 from '@/assets/images/gallery/01.jpg';
+import photo02 from '@/assets/images/gallery/02.jpg';
+import photo03 from '@/assets/images/gallery/03.jpg';
+import photo04 from '@/assets/images/gallery/04.jpg';
+import photo05 from '@/assets/images/gallery/05.jpg';
+import photo06 from '@/assets/images/gallery/06.jpg';
+
+const rawPhotos = [
+  { img: photo01, alt: 'mento' },
+  { img: photo02, alt: 'mento' },
+  { img: photo03, alt: 'mento' },
+  { img: photo04, alt: 'mento' },
+  { img: photo05, alt: 'mento' },
+  { img: photo06, alt: 'mento' },
 ];
+
+// Lightbox opens a single flat image (no srcset), so its full-size src is
+// precomputed here as WebP rather than reusing the thumbnail's responsive output.
+const photos = await Promise.all(
+  rawPhotos.map(async ({ img, alt }) => {
+    const full = await getImage({ src: img, widths: [1600], format: 'webp', quality: 80 });
+    return { img, alt, fullSrc: full.srcSet.values[0].url };
+  })
+);
 ---
 
 <section id="gallery" class="section gallery" aria-labelledby="gallery-heading">
@@ -15,16 +31,27 @@ const photos = [
     <h2 id="gallery-heading" class="section-label">Fotos</h2>
 
     <ul class="gallery__grid" role="list">
-      {photos.map(({ src, alt }, i) => (
+      {photos.map(({ img, alt, fullSrc }, i) => (
         <li class="gallery__item">
           <button
             class="gallery__btn"
             type="button"
             aria-label={`Ver foto ${i + 1} en pantalla completa`}
-            data-src={src}
+            data-src={fullSrc}
             data-alt={alt}
           >
-            <img src={src} alt={alt} loading="lazy" decoding="async" class="gallery__img" />
+            <Image
+              src={img}
+              alt={alt}
+              loading="lazy"
+              decoding="async"
+              class="gallery__img"
+              width={1200}
+              widths={[400, 800, 1200]}
+              sizes="(min-width: 600px) 33vw, 100vw"
+              format="webp"
+              quality={75}
+            />
           </button>
         </li>
       ))}
